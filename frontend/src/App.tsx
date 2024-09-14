@@ -6,7 +6,7 @@ import { UploadFile } from "./components/UploadFile";
 import { Button } from './components/ui/button'
 
 const response: Response = {
-  "ui":{
+ "ui":{
     "root":{
        "element":{
           "type":"Container",
@@ -32,13 +32,7 @@ const response: Response = {
              {
                 "element":{
                    "type":"Text",
-                   "value":"Don't have a Shopify account? "
-                }
-             },
-             {
-                "element":{
-                   "type":"Button",
-                   "text":"Start free trial"
+                   "value":"Don't have a Shopify account? Start free trial →"
                 }
              },
              {
@@ -63,15 +57,17 @@ const response: Response = {
                             "value":"Terms"
                          }
                       }
-                   ]
+                   ],
+                   "direction":"row"
                 }
              }
-          ]
+          ],
+          "direction":"col"
        }
     }
   }
 }
-
+  
 function App() {
   const [isUploadPage, setIsUploadPage] = useState(true);
   return (

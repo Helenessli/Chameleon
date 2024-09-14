@@ -9,7 +9,7 @@ export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[
     return uiElements.map(uiElement => {
       if (uiElement.element.type == "Container") {
           return (
-              <div>
+              <div className={uiElement.element.direction == "row" ? "flex flex-row" : "flex flex-col"}>
                   <WebsiteRender uiElement={uiElement.element.children || []} />
               </div>
           )

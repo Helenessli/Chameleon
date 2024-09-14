@@ -40,6 +40,7 @@ class Text(pydantic.BaseModel):
 class Container(pydantic.BaseModel):
     type: typing.Literal["Container"]
     children: typing.List["UiElement"]
+    direction: typing.Literal["row"] | typing.Literal["col"]
 
 class TextInput(pydantic.BaseModel):
     type: typing.Literal["TextInput"]
