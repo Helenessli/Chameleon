@@ -17,7 +17,7 @@ def encode_image(image_path):
 
 # Path to your image
 current_directory = os.path.dirname(__file__)
-image_path = os.path.join(current_directory, "bird.jpg")
+image_path = os.path.join(current_directory, "..", "resources", "instagram.png")
 
 # Getting the base64 string
 base64_image = encode_image(image_path)
