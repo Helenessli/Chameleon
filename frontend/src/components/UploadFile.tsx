@@ -28,7 +28,8 @@ export const UploadFile = () => {
       const formData = new FormData();
       if (selectedImage) {
         formData.append("file", selectedImage);
-        const response = await axiosInstance.post(`/upload/file`, formData, {
+        console.log(formData);
+        const response = await axiosInstance.post(`/upload-file`, formData, {
           onUploadProgress: (progressEvent) => {
             if (progressEvent.total) {
               const progress = Math.round(
@@ -84,12 +85,11 @@ const fileToDataString = (file: File) => {
 
 // POST image to backend API
 
-const headers: HeadersInit = {
-  "Content-Type": `multipart/form-data;`,
-  Accept: "multipart/form-data",
-};
+// const headers: HeadersInit = {
+//   "Content-Type": `multipart/form-data;`,
+//   Accept: "multipart/form-data",
+// };
 
-export const axiosInstance = axios.create({
-  baseURL: "https://localhost:5005",
-  headers,
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000",
 });

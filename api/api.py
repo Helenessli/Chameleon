@@ -1,11 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 import enum
 import base64
 import pydantic
 import typing
 import os
 from dotenv import load_dotenv
-import openai  
+import openai 
+import json
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -13,6 +15,17 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 client = openai.OpenAI()
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class UIType(str, enum.Enum):
     container = "container"
@@ -50,13 +63,13 @@ def generate_json():
 
     # Path to your image
     current_directory = os.path.dirname(__file__)
-    image_path = os.path.join(current_directory, "..", "resources", "instagram.png")
+    image_path = os.path.join(current_directory, "..", "resources", "bird.jpg")
 
     # Getting the base64 string
     base64_image = encode_image(image_path)
 
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o-2024-08-06",
+        model="gpt-4o",
         messages=[
             {
               "role": "system",
@@ -70,7 +83,11 @@ def generate_json():
                   "image_url": {
                     "url": f"data:image/jpeg;base64,{base64_image}"
                   }
-                }
+                },
+                {
+                    "type": "text",
+                    "text": "Using this image, generate JSON for a website featuring this product or theme."
+                },
               ]
             },
         ],
@@ -78,9 +95,19 @@ def generate_json():
     )
 
     if completion and completion.choices:
+        return json.loads(completion.choices[0].message.content)
         print(completion.choices[0])
         print(type(completion.choices[0]))
+        return completion.choices[0]
     else:
         # Return error message with status code
         return {"error": "Failed to get response from OpenAI API", "status_code": 400}
+
+
+
+@app.post("/upload-file")
+def upload_file(file: UploadFile):
+  print(file.filename)
+  print(file.content_type)
+
 
