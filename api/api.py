@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 import enum
 import base64
 import pydantic
@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 import openai 
 import json
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -14,6 +15,17 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 client = openai.OpenAI()
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class UIType(str, enum.Enum):
     container = "container"
@@ -57,7 +69,7 @@ def generate_json():
     base64_image = encode_image(image_path)
 
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[
             {
               "role": "system",
@@ -74,7 +86,7 @@ def generate_json():
                 },
                 {
                     "type": "text",
-                    "text": "Using this image, generate HTML code for a website featuring this product or theme."
+                    "text": "Using this image, generate JSON for a website featuring this product or theme."
                 },
               ]
             },
@@ -90,4 +102,12 @@ def generate_json():
     else:
         # Return error message with status code
         return {"error": "Failed to get response from OpenAI API", "status_code": 400}
+
+
+
+@app.post("/upload-file")
+def upload_file(file: UploadFile):
+  print(file.filename)
+  print(file.content_type)
+
 
