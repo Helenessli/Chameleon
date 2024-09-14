@@ -1,4 +1,7 @@
+import enum
 import base64
+import pydantic
+import typing
 import requests
 import os
 from dotenv import load_dotenv
@@ -22,34 +25,60 @@ image_path = os.path.join(current_directory, "..", "resources", "instagram.png")
 # Getting the base64 string
 base64_image = encode_image(image_path)
 
-headers = {
-  "Content-Type": "application/json",
-  "Authorization": f"Bearer {api_key}"
-}
+client = openai.OpenAI()
 
-payload = {
-  "model": "gpt-4o-mini",
-  "messages": [
-    {
-      "role": "user",
-      "content": [
+class UIType(str, enum.Enum):
+    container = "container"
+    button = "button"
+    textinput = "textinput"
+    form = "form"
+    text = "text"
+
+class AttributeName(str, enum.Enum):
+    button_text = "button/text"
+    textinput_placeholder = "textinput/placeholder"
+    text_text = "text/text"
+
+class Attribute(pydantic.BaseModel):
+    name: AttributeName
+    value: str
+
+class UI(pydantic.BaseModel):
+    type: UIType
+    children: typing.List["UI"] 
+    attributes: typing.List[Attribute]
+
+UI.model_rebuild() # This is required to enable recursive types
+
+class Response(pydantic.BaseModel):
+    ui: UI
+
+completion = client.beta.chat.completions.parse(
+    model="gpt-4o-2024-08-06",
+    messages=[
         {
-          "type": "text",
-          "text": "What’s in this image?"
+          "role": "system",
+          "content": "You are a UI generator AI. Convert the user input into a UI."
         },
         {
-          "type": "image_url",
-          "image_url": {
-            "url": f"data:image/jpeg;base64,{base64_image}"
-          }
-        }
-      ]
-    }
-  ],
-  "max_tokens": 300
-}
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": f"data:image/jpeg;base64,{base64_image}"
+              }
+            }
+          ]
+        },
+    ],
+    response_format=Response,
+)
 
-response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
 
-print(response.json())
+ui = completion.choices[0].message.parsed
+
+print(completion)
+print()
+print(ui.model_dump_json(indent=2))
 
