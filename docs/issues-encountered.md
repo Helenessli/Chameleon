@@ -1,0 +1,1 @@
+- Structured Outputs does not support `oneOf`
