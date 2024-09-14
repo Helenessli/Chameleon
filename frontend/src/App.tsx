@@ -1,102 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { jsonHTML, WebsiteRender } from './components/WebsiteRender/WebsiteRender'
-import { HTMLTag } from './components/WebsiteRender/types'
+import { WebsiteRender } from './components/WebsiteRender/WebsiteRender'
+import { Response } from './components/WebsiteRender/types'
 import { UploadFile } from "./components/UploadFile";
 
-const json: jsonHTML[] = [
-  {
-    "type": "container",
-    "children": [
-      {
-        "type": "text",
-        "children": [],
-        "attributes": [
-          {
-            "name": "text/text",
-            "value": "freestyle_barber700"
-          }
-        ]
-      },
-      {
-        "type": "button",
-        "children": [],
-        "attributes": [
-          {
-            "name": "button/text",
-            "value": "Follow"
-          }
-        ]
-      },
-      {
-        "type": "text",
-        "children": [],
-        "attributes": [
-          {
-            "name": "text/text",
-            "value": "3 posts    222 followers    850 following"
-          }
-        ]
-      },
-      {
-        "type": "text",
-        "children": [],
-        "attributes": [
-          {
-            "name": "text/text",
-            "value": "freestyle barber shop"
-          }
-        ]
-      },
-      {
-        "type": "text",
-        "children": [],
-        "attributes": [
-          {
-            "name": "text/text",
-            "value": "✂️ Freestyle Barber shop ✂️\n700 March Rd, Ottawa, ON K2K 2V9\n📞 Tel: 613-834-9936\n📱 Cell: 613-614-1980"
-          }
-        ]
-      },
-      {
-        "type": "container",
-        "children": [
-          {
-            "type": "button",
-            "children": [],
-            "attributes": [
-              {
-                "name": "button/text",
-                "value": "POSTS"
-              }
-            ]
-          },
-          {
-            "type": "button",
-            "children": [],
-            "attributes": [
-              {
-                "name": "button/text",
-                "value": "TAGGED"
-              }
-            ]
-          }
-        ],
-        "attributes": []
-      }
-    ],
-    "attributes": []
+const response: Response = {
+  "ui":{
+    "root":{
+       "element":{
+          "type":"Container",
+          "children":[
+             {
+                "element":{
+                   "type":"Text",
+                   "value":"Log in"
+                }
+             },
+             {
+                "element":{
+                   "type":"Text",
+                   "value":"Continue to Shopify"
+                }
+             },
+             {
+                "element":{
+                   "type":"Button",
+                   "text":"Log in to your Shopify Account"
+                }
+             },
+             {
+                "element":{
+                   "type":"Text",
+                   "value":"Don't have a Shopify account? "
+                }
+             },
+             {
+                "element":{
+                   "type":"Button",
+                   "text":"Start free trial"
+                }
+             },
+             {
+                "element":{
+                   "type":"Container",
+                   "children":[
+                      {
+                         "element":{
+                            "type":"Text",
+                            "value":"Help"
+                         }
+                      },
+                      {
+                         "element":{
+                            "type":"Text",
+                            "value":"Privacy"
+                         }
+                      },
+                      {
+                         "element":{
+                            "type":"Text",
+                            "value":"Terms"
+                         }
+                      }
+                   ]
+                }
+             }
+          ]
+       }
+    }
   }
-]
+}
 
 function App() {
   return (
     <>
       <h1>Chameleon</h1>
       <UploadFile />
-      <WebsiteRender json={json} />
+      <WebsiteRender uiElement={response.ui.root} />
     </>
   );
 }

@@ -52,13 +52,13 @@ class Form(pydantic.BaseModel):
 class UiElement(pydantic.BaseModel):
     element: Button | Container | Text | TextInput | Form
 
-class UI(pydantic.BaseModel):
+class Ui(pydantic.BaseModel):
     root: UiElement
 
-UI.model_rebuild() # This is required to enable recursive types
+Ui.model_rebuild() # This is required to enable recursive types
 
 class Response(pydantic.BaseModel):
-    ui: UI
+    ui: Ui
 
 @app.get("/")
 def generate_json():
