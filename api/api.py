@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 import openai
 import time
 import logging
+from fastapi import FastAPI, UploadFile, File
+from pathlib import Path
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -60,8 +62,8 @@ Ui.model_rebuild() # This is required to enable recursive types
 class Response(pydantic.BaseModel):
     ui: Ui
 
-@app.get("/")
-def generate_json():
+@app.post("/upload-file")
+async def generate_json(file: UploadFile = File(...)):
 
     # Function to encode the image
     def encode_image(image_path):
@@ -70,7 +72,12 @@ def generate_json():
 
     # Path to your image
     current_directory = os.path.dirname(__file__)
-    image_path = os.path.join(current_directory, "..", "resources", "shopify-login.png")
+    UPLOAD_DIR = os.path.join(current_directory, "..", "resources")
+    image_path = os.path.join(UPLOAD_DIR, file.filename)  # Get the file path
+
+    with open(image_path, "wb") as f:
+      f.write(await file.read())  # Save the uploaded file
+    print(f"File stored at: {image_path}")
 
     # Getting the base64 string
     base64_image = encode_image(image_path)
