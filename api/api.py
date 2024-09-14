@@ -5,7 +5,8 @@ import pydantic
 import typing
 import os
 from dotenv import load_dotenv
-import openai  
+import openai 
+import json
 
 # Load environment variables
 load_dotenv()
@@ -50,13 +51,13 @@ def generate_json():
 
     # Path to your image
     current_directory = os.path.dirname(__file__)
-    image_path = os.path.join(current_directory, "..", "resources", "instagram.png")
+    image_path = os.path.join(current_directory, "..", "resources", "bird.jpg")
 
     # Getting the base64 string
     base64_image = encode_image(image_path)
 
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o-2024-08-06",
+        model="gpt-4o-mini",
         messages=[
             {
               "role": "system",
@@ -70,7 +71,11 @@ def generate_json():
                   "image_url": {
                     "url": f"data:image/jpeg;base64,{base64_image}"
                   }
-                }
+                },
+                {
+                    "type": "text",
+                    "text": "Using this image, generate HTML code for a website featuring this product or theme."
+                },
               ]
             },
         ],
@@ -78,8 +83,10 @@ def generate_json():
     )
 
     if completion and completion.choices:
+        return json.loads(completion.choices[0].message.content)
         print(completion.choices[0])
         print(type(completion.choices[0]))
+        return completion.choices[0]
     else:
         # Return error message with status code
         return {"error": "Failed to get response from OpenAI API", "status_code": 400}
