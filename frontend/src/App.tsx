@@ -3,7 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { jsonHTML, WebsiteRender } from './components/WebsiteRender/WebsiteRender'
-import { htmlTag } from './components/WebsiteRender/types'
+import { HTMLTag } from './components/WebsiteRender/types'
+import { UploadFile } from "./components/UploadFile";
 
 const json: jsonHTML[] = [
   {
@@ -91,13 +92,13 @@ const json: jsonHTML[] = [
 ]
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
+      <h1>Chameleon</h1>
+      <UploadFile />
       <WebsiteRender json={json} />
     </>
-  )
+  );
 }
 
 export default App
