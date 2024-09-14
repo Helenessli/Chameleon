@@ -2,32 +2,100 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { jsonHTML, WebsiteRender } from './components/WebsiteRender/WebsiteRender'
+import { htmlTag } from './components/WebsiteRender/types'
+
+const json: jsonHTML[] = [
+  {
+    "type": "container",
+    "children": [
+      {
+        "type": "text",
+        "children": [],
+        "attributes": [
+          {
+            "name": "text/text",
+            "value": "freestyle_barber700"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "children": [],
+        "attributes": [
+          {
+            "name": "button/text",
+            "value": "Follow"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "children": [],
+        "attributes": [
+          {
+            "name": "text/text",
+            "value": "3 posts    222 followers    850 following"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "children": [],
+        "attributes": [
+          {
+            "name": "text/text",
+            "value": "freestyle barber shop"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "children": [],
+        "attributes": [
+          {
+            "name": "text/text",
+            "value": "✂️ Freestyle Barber shop ✂️\n700 March Rd, Ottawa, ON K2K 2V9\n📞 Tel: 613-834-9936\n📱 Cell: 613-614-1980"
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "children": [
+          {
+            "type": "button",
+            "children": [],
+            "attributes": [
+              {
+                "name": "button/text",
+                "value": "POSTS"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "children": [],
+            "attributes": [
+              {
+                "name": "button/text",
+                "value": "TAGGED"
+              }
+            ]
+          }
+        ],
+        "attributes": []
+      }
+    ],
+    "attributes": []
+  }
+]
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <WebsiteRender json={json} />
     </>
   )
 }
