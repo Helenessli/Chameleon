@@ -1,13 +1,16 @@
-from fastapi import FastAPI, UploadFile
-import enum
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import base64
 import pydantic
 import typing
 import os
 from dotenv import load_dotenv
-import openai 
-import json
-from fastapi.middleware.cors import CORSMiddleware
+import openai
+import time
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -26,27 +29,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class Button(pydantic.BaseModel):
+    type: typing.Literal["Button"]
+    text: str
 
-class UIType(str, enum.Enum):
-    container = "container"
-    button = "button"
-    textinput = "textinput"
-    form = "form"
-    text = "text"
-
-class AttributeName(str, enum.Enum):
-    button_text = "button/text"
-    textinput_placeholder = "textinput/placeholder"
-    text_text = "text/text"
-
-class Attribute(pydantic.BaseModel):
-    name: AttributeName
+class Text(pydantic.BaseModel):
+    type: typing.Literal["Text"]
     value: str
 
+class Container(pydantic.BaseModel):
+    type: typing.Literal["Container"]
+    children: typing.List["UiElement"]
+
+class TextInput(pydantic.BaseModel):
+    type: typing.Literal["TextInput"]
+    placeholder: str
+
+class Form(pydantic.BaseModel):
+    type: typing.Literal["Form"]
+    children: typing.List["UiElement"]
+
+class UiElement(pydantic.BaseModel):
+    element: Button | Container | Text | TextInput | Form
+
 class UI(pydantic.BaseModel):
-    type: UIType
-    children: typing.List["UI"] 
-    attributes: typing.List[Attribute]
+    root: UiElement
 
 UI.model_rebuild() # This is required to enable recursive types
 
@@ -63,17 +70,18 @@ def generate_json():
 
     # Path to your image
     current_directory = os.path.dirname(__file__)
-    image_path = os.path.join(current_directory, "..", "resources", "bird.jpg")
+    image_path = os.path.join(current_directory, "..", "resources", "shopify-login.png")
 
     # Getting the base64 string
     base64_image = encode_image(image_path)
 
+    start = time.time()
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o",
+        model="gpt-4o-2024-08-06",
         messages=[
             {
               "role": "system",
-              "content": "You are a UI generator AI. Convert the user input into a UI."
+              "content": "You are a UI generator AI. Convert the user input into a UI. You should attempt to convert all of the input. If you encounter a sensitive image you must convert it to a placeholder image."
             },
             {
               "role": "user",
@@ -83,31 +91,18 @@ def generate_json():
                   "image_url": {
                     "url": f"data:image/jpeg;base64,{base64_image}"
                   }
-                },
-                {
-                    "type": "text",
-                    "text": "Using this image, generate JSON for a website featuring this product or theme."
-                },
+                }
               ]
             },
         ],
         response_format=Response,
     )
+    end = time.time()
 
+    logger.info(f"inference took {end - start} sec")
     if completion and completion.choices:
-        return json.loads(completion.choices[0].message.content)
-        print(completion.choices[0])
-        print(type(completion.choices[0]))
-        return completion.choices[0]
+        return completion.choices[0].message.parsed
     else:
         # Return error message with status code
         return {"error": "Failed to get response from OpenAI API", "status_code": 400}
-
-
-
-@app.post("/upload-file")
-def upload_file(file: UploadFile):
-  print(file.filename)
-  print(file.content_type)
-
 
