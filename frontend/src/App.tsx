@@ -36,7 +36,6 @@ function App() {
   const UploadFile = ({setCurImage}) => {
     const [selectedImage, setSelectedImage] = useState<File>();
     const [previewImgUrl, setPreviewimgUrl] = useState("");
-    const [progress, setProgress] = useState<number>(0);
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (
       event
@@ -61,17 +60,7 @@ function App() {
         if (selectedImage) {
           formData.append("text", "");
           formData.append("file", selectedImage);
-          const response = await axiosInstance.post("/upload-file", formData, {
-            onUploadProgress: (progressEvent) => {
-              if (progressEvent.total) {
-                const progress = Math.round(
-                  (100 * progressEvent.loaded) / progressEvent.total
-                );
-                setProgress(progress);
-              }
-            },
-          });
-          setProgress(0);
+          const response = await axiosInstance.post("/upload-file", formData);
           setCurImage(selectedImage);
           setUiElement(response.data.ui.root);
           console.log(response);
@@ -91,22 +80,15 @@ function App() {
         </div>
       )}
       <div className="wrapper" style={{
-              position: "absolute",       
-              top: "80%",                 
-             
+              position: "absolute",
+              top: "80%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
       }}>
-        {selectedImage && progress > 0 && (
-          <div className="progress my-3">
-            <div className="progress-bar progress-bar-info" role="progressbar">
-              {progress}%
-            </div>
-          </div>
-        )}
-     
-
-        <form style = {{marginLeft: "500px"}}onSubmit={handleImageUpload}>
+        <form onSubmit={handleImageUpload}>
           <input type="file" onChange={handleFileChange} accept="image/*" />
-          <button disabled={!selectedImage} type="submit" style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", position: 'absolute', fontFamily: 'Istok Web'}}>
+          <button disabled={!selectedImage} type="submit" style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", fontFamily: 'Istok Web'}}>
             Upload
           </button>
         </form>
@@ -137,19 +119,17 @@ function App() {
     
     <>
       <img
-        src={logo}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', marginLeft: '430px'}}  
-      />
-      <img
         src={leftdecor}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', left: '0', top: '0', transform: 'scale(0.8)', transformOrigin: 'top left'}}  
+        style={{ position: 'absolute', left: '0', top: '0', transform: 'scale(0.8)', transformOrigin: 'top left'}}  
       />
       <img
         src={rightdecor}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', right: '0', bottom: '0', transform: 'scale(0.8)', transformOrigin: 'bottom right'}}  
+        style={{ position: 'absolute', right: '0', bottom: '0', transform: 'scale(0.8)', transformOrigin: 'bottom right'}}  
       />
-
-      <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px',  marginLeft: '550px', marginTop: '50px' }}>Chameleon</h1>
+      <div style={{marginLeft: "auto", marginRight: "auto", display: "flex", marginTop: "50px", justifyContent: "center", gap: "20px"}}>
+        <img src={logo}/>
+        <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px'}}>Chameleon</h1>
+      </div>
       {isUploadPage ? <UploadFile setCurImage={setCurImage}/> : <WebsiteRender uiElement={uiElement} />}
       <Button
         style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web', position: 'absolute'}} onClick={() => setIsUploadPage(!isUploadPage)}>
