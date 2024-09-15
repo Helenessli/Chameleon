@@ -18,6 +18,7 @@ export interface Button extends DiscriminatableUiElement {
 export interface Text extends DiscriminatableUiElement {
   type: "Text";
   value: string;
+  url: string | null;
   marginTopRem: number | null;
   marginRightRem: number | null;
   marginBottomRem: number | null;

@@ -48,6 +48,7 @@ class Button(pydantic.BaseModel):
 class Text(pydantic.BaseModel):
     type: typing.Literal["Text"]
     value: str
+    url: str | None
     marginTopRem: int | None
     marginRightRem: int | None
     marginBottomRem: int | None
