@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { WebsiteRender } from "./components/WebsiteRender/WebsiteRender";
-import { Response } from "./components/WebsiteRender/types";
 import { Button } from "./components/ui/button";
 import logo from './resources/logo.png';
 import leftdecor from './resources/leftdecor.png';
@@ -24,19 +23,17 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:8000",
 });
 
-const response: Response = {"ui":{"root":{"element":{"type":"Container","children":[{"element":{"type":"Text","value":"shopify","marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":1}},{"element":{"type":"Text","value":"Start free trial","marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Container","children":[{"element":{"type":"Text","value":"Log in","marginTopRem":null,"marginRightRem":null,"marginBottomRem":1,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Text","value":"Continue to Shopify","marginTopRem":null,"marginRightRem":null,"marginBottomRem":1,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Button","text":"Log in to your Shopify Account","marginTopRem":null,"marginRightRem":null,"marginBottomRem":2,"marginLeftRem":null,"paddingTopRem":1,"paddingRightRem":1,"paddingBottomRem":1,"paddingLeftRem":1}},{"element":{"type":"Text","value":"Don't have a Shopify account? Start free trial","marginTopRem":null,"marginRightRem":null,"marginBottomRem":1,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Container","children":[{"element":{"type":"Text","value":"Help","marginTopRem":null,"marginRightRem":3,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Text","value":"Privacy","marginTopRem":null,"marginRightRem":3,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Text","value":"Terms","marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}}],"direction":"row","justify":"start","align":"center","borderWidthPx":null,"marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}}],"direction":"col","justify":"center","align":"center","borderWidthPx":0,"marginTopRem":2,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":3,"paddingRightRem":3,"paddingBottomRem":3,"paddingLeftRem":3}}],"direction":"col","justify":"start","align":"stretch","borderWidthPx":null,"marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":3,"paddingRightRem":3,"paddingBottomRem":3,"paddingLeftRem":3}}}}
-
 function App() {
-  const [uiElement, setUiElement] = useState(response.ui.root);
+  const [uiElement, setUiElement] = useState(null);
   const [allText, setAllText] = useState("");
   const [textPrompt, setTextPrompt] = useState<string>(""); 
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isRetrieving, setIsRetrieving] = useState(false);
 
   const [curImage, setCurImage] = useState<File>();
   const UploadFile = ({setCurImage}) => {
     const [selectedImage, setSelectedImage] = useState<File>();
     const [previewImgUrl, setPreviewimgUrl] = useState("");
-    const [progress, setProgress] = useState<number>(0);
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (
       event
@@ -61,17 +58,14 @@ function App() {
         if (selectedImage) {
           formData.append("text", "");
           formData.append("file", selectedImage);
-          const response = await axiosInstance.post("/upload-file", formData, {
-            onUploadProgress: (progressEvent) => {
-              if (progressEvent.total) {
-                const progress = Math.round(
-                  (100 * progressEvent.loaded) / progressEvent.total
-                );
-                setProgress(progress);
-              }
-            },
-          });
-          setProgress(0);
+          console.log(formData);
+          setIsRetrieving(true);
+          let response;
+          try {
+            response = await axiosInstance.post("/upload-file", formData)
+          } finally {
+            setIsRetrieving(false);
+          }
           setCurImage(selectedImage);
           setUiElement(response.data.ui.root);
           console.log(response);
@@ -87,26 +81,19 @@ function App() {
           className="image_wrapper"
           style={{ display: "flex", justifyContent: "center" }}
         >
-          <img src={previewImgUrl} alt="image" style={{ height: "350px", width: 'auto'}} />
+          <img src={previewImgUrl} alt="image" style={{ height: "500px", width: 'auto'}} />
         </div>
       )}
       <div className="wrapper" style={{
-              position: "absolute",       
-              top: "80%",                 
-             
+              position: "absolute",
+              top: "80%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
       }}>
-        {selectedImage && progress > 0 && (
-          <div className="progress my-3">
-            <div className="progress-bar progress-bar-info" role="progressbar">
-              {progress}%
-            </div>
-          </div>
-        )}
-     
-
-        <form style = {{marginLeft: "500px"}}onSubmit={handleImageUpload}>
+        <form onSubmit={handleImageUpload}>
           <input type="file" onChange={handleFileChange} accept="image/*" />
-          <button disabled={!selectedImage} type="submit" style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", position: 'absolute', fontFamily: 'Istok Web'}}>
+          <button disabled={!selectedImage} type="submit" style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", fontFamily: 'Istok Web'}}>
             Upload
           </button>
         </form>
@@ -134,25 +121,27 @@ function App() {
   };
 
   return (
-    
     <>
       <img
-        src={logo}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', marginLeft: '430px'}}  
-      />
-      <img
         src={leftdecor}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', left: '0', top: '0', transform: 'scale(0.8)', transformOrigin: 'top left'}}  
+        style={{ position: 'fixed', left: '0', top: '0', transform: 'scale(0.8)', transformOrigin: 'top left'}}  
       />
       <img
         src={rightdecor}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', right: '0', bottom: '0', transform: 'scale(0.8)', transformOrigin: 'bottom right'}}  
+        style={{ position: 'fixed', right: '0', bottom: '0', transform: 'scale(0.8)', transformOrigin: 'bottom right'}}  
       />
-
-      <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px',  marginLeft: '550px', marginTop: '50px' }}>Chameleon</h1>
-      {isUploadPage ? <UploadFile setCurImage={setCurImage}/> : <WebsiteRender uiElement={uiElement} />}
+      <div style={{marginLeft: "auto", marginRight: "auto", display: "flex", marginTop: "50px", justifyContent: "center", gap: "20px", marginBottom: "30px"}}>
+        <img src={logo}/>
+        <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px'}}>Chameleon</h1>
+      </div>
+      {isUploadPage ? <UploadFile setCurImage={setCurImage}/> : (
+        <div style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", borderRadius: "20px", padding: "15px", width: "70%", marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
+          {uiElement == null ? <span>There's nothing here yet! Try uploading a file and then check back.</span> : <WebsiteRender uiElement={uiElement} />}
+        </div>
+      )}
       <Button
-        style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web', position: 'absolute'}} onClick={() => setIsUploadPage(!isUploadPage)}>
+        disabled={isRetrieving}
+        style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", position: "fixed", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web'}} onClick={() => setIsUploadPage(!isUploadPage)}>
         Change Page
       </Button>
       <Input value={textPrompt} style={{position: "fixed", bottom: 10, right: 10, width: 300}} onChange={(e) => setTextPrompt(e.target.value)}
