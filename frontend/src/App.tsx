@@ -28,7 +28,7 @@ function App() {
   const [allText, setAllText] = useState("");
   const [textPrompt, setTextPrompt] = useState<string>(""); 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isRetrieving, setIsRetrieving] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [curImage, setCurImage] = useState<File>();
   const UploadFile = ({setCurImage}) => {
@@ -54,23 +54,24 @@ function App() {
     const handleImageUpload = async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       try {
+        setLoading(true);
         const formData = new FormData();
         if (selectedImage) {
           formData.append("text", "");
           formData.append("file", selectedImage);
           console.log(formData);
-          setIsRetrieving(true);
           let response;
           try {
             response = await axiosInstance.post("/upload-file", formData)
           } finally {
-            setIsRetrieving(false);
+            setLoading(false);
           }
           setCurImage(selectedImage);
           setUiElement(response.data.ui.root);
           console.log(response);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
@@ -105,6 +106,8 @@ function App() {
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      setLoading(true);
+
       const formData = new FormData();
       formData.append("text", allText.concat(textPrompt));
       formData.append("file", curImage);
@@ -114,6 +117,8 @@ function App() {
       console.log(response);
       setAllText(allText.concat(textPrompt).concat("\\n"))
       setTextPrompt(""); 
+      setLoading(false);
+
       if (inputRef.current) {
         inputRef.current.value = "";
       }
@@ -139,12 +144,13 @@ function App() {
           {uiElement == null ? <span>There's nothing here yet! Try uploading a file and then check back.</span> : <WebsiteRender uiElement={uiElement} />}
         </div>
       )}
+      {loading && (<div className="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>)}
       <Button
-        disabled={isRetrieving}
+        disabled={loading}
         style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", position: "fixed", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web'}} onClick={() => setIsUploadPage(!isUploadPage)}>
         Change Page
       </Button>
-      <Input value={textPrompt} style={{position: "fixed", bottom: 10, right: 10, width: 300}} onChange={(e) => setTextPrompt(e.target.value)}
+      <Input disabled={loading} value={textPrompt} style={{position: "fixed", bottom: 10, right: 10, width: 300}} onChange={(e) => setTextPrompt(e.target.value)}
         onKeyDown={handleKeyDown} placeholder="Add more prompt changes" />
     </>
   );
