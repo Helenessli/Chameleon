@@ -1,3 +1,4 @@
+import ReactDOMServer from 'react-dom/server';
 import { useRef, useState } from "react";
 import { WebsiteRender } from "./components/WebsiteRender/WebsiteRender";
 import { Button } from "./components/ui/button";
@@ -151,9 +152,13 @@ function App() {
       </div>
       <Button
         disabled={loading}
-        style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", width: "80px", color: "black", position: "fixed", bottom: 20, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web'}} onClick={() => setIsUploadPage(!isUploadPage)}>
+        style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", width: "80px", color: "black", position: "absolute", bottom: 20, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web'}} onClick={() => setIsUploadPage(!isUploadPage)}>
         {isUploadPage ? "Results" : "Upload"}
       </Button>
+      {!isUploadPage && uiElement != null && (<Button style={{position: "absolute", bottom:20, left:"40%"}} onClick={() => {navigator.clipboard.writeText(ReactDOMServer.renderToStaticMarkup(WebsiteRender({uiElement})));
+        alert("Copied HTML Code")}}>Download code</Button>)}
+      {!isUploadPage && uiElement != null && (<Button style={{position: "absolute", bottom:20, left:"calc(50% - 12px)"}} onClick={() => {navigator.clipboard.writeText(ReactDOMServer.renderToStaticMarkup(WebsiteRender({uiElement})));
+        window.open("https://admin.shopify.com/store/quickstart-ffb29062/apps/test-app-10377/app/additional", "_blank")}}>Export to Shopify Page</Button>)}
     </>
   );
 }
