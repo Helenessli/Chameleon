@@ -29,16 +29,23 @@ export const UploadFile = () => {
       if (selectedImage) {
         formData.append("file", selectedImage);
         console.log(formData);
-        const response = await axiosInstance.post(`/upload-file`, formData, {
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const progress = Math.round(
-                (100 * progressEvent.loaded) / progressEvent.total
-              );
-              setProgress(progress);
-            }
-          },
-        });
+        const response = await axiosInstance
+          .post("/upload-file", formData, {
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.total) {
+                const progress = Math.round(
+                  (100 * progressEvent.loaded) / progressEvent.total
+                );
+                setProgress(progress);
+              }
+            },
+          })
+          .then((response) => {
+            console.log(response.data); // Log the response data
+          })
+          .catch((error) => {
+            console.error("Error:", error); // Handle and log errors
+          });
         setProgress(0);
         console.log(response);
       }
