@@ -20,16 +20,7 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:8000",
 });
 
-const response: Response = {
-  ui: {
-    root: {
-      element: {
-        type: "Text",
-        value: "Chameleon for the win",
-      },
-    },
-  },
-};
+const response: Response = {"ui":{"root":{"element":{"type":"Container","children":[{"element":{"type":"Text","value":"shopify","marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":1}},{"element":{"type":"Text","value":"Start free trial","marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Container","children":[{"element":{"type":"Text","value":"Log in","marginTopRem":null,"marginRightRem":null,"marginBottomRem":1,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Text","value":"Continue to Shopify","marginTopRem":null,"marginRightRem":null,"marginBottomRem":1,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Button","text":"Log in to your Shopify Account","marginTopRem":null,"marginRightRem":null,"marginBottomRem":2,"marginLeftRem":null,"paddingTopRem":1,"paddingRightRem":1,"paddingBottomRem":1,"paddingLeftRem":1}},{"element":{"type":"Text","value":"Don't have a Shopify account? Start free trial","marginTopRem":null,"marginRightRem":null,"marginBottomRem":1,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Container","children":[{"element":{"type":"Text","value":"Help","marginTopRem":null,"marginRightRem":3,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Text","value":"Privacy","marginTopRem":null,"marginRightRem":3,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}},{"element":{"type":"Text","value":"Terms","marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}}],"direction":"row","justify":"start","align":"center","borderWidthPx":null,"marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":null,"paddingRightRem":null,"paddingBottomRem":null,"paddingLeftRem":null}}],"direction":"col","justify":"center","align":"center","borderWidthPx":0,"marginTopRem":2,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":3,"paddingRightRem":3,"paddingBottomRem":3,"paddingLeftRem":3}}],"direction":"col","justify":"start","align":"stretch","borderWidthPx":null,"marginTopRem":null,"marginRightRem":null,"marginBottomRem":null,"marginLeftRem":null,"paddingTopRem":3,"paddingRightRem":3,"paddingBottomRem":3,"paddingLeftRem":3}}}}
 
 function App() {
   const [uiElement, setUiElement] = useState(response.ui.root);

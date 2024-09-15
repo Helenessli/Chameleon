@@ -34,10 +34,26 @@ app.add_middleware(
 class Button(pydantic.BaseModel):
     type: typing.Literal["Button"]
     text: str
+    marginTopRem: int | None
+    marginRightRem: int | None
+    marginBottomRem: int | None
+    marginLeftRem: int | None
+    paddingTopRem: int | None
+    paddingRightRem: int | None
+    paddingBottomRem: int | None
+    paddingLeftRem: int | None
 
 class Text(pydantic.BaseModel):
     type: typing.Literal["Text"]
     value: str
+    marginTopRem: int | None
+    marginRightRem: int | None
+    marginBottomRem: int | None
+    marginLeftRem: int | None
+    paddingTopRem: int | None
+    paddingRightRem: int | None
+    paddingBottomRem: int | None
+    paddingLeftRem: int | None
 
 class Container(pydantic.BaseModel):
     type: typing.Literal["Container"]
@@ -45,14 +61,39 @@ class Container(pydantic.BaseModel):
     direction: typing.Literal["row"] | typing.Literal["col"]
     justify: typing.Literal["start"] | typing.Literal["end"] | typing.Literal["center"] | typing.Literal["between"] | typing.Literal["around"]
     align: typing.Literal["start"] | typing.Literal["end"] | typing.Literal["center"] | typing.Literal["stretch"]
+    borderWidthPx: int | None
+    marginTopRem: int | None
+    marginRightRem: int | None
+    marginBottomRem: int | None
+    marginLeftRem: int | None
+    paddingTopRem: int | None
+    paddingRightRem: int | None
+    paddingBottomRem: int | None
+    paddingLeftRem: int | None
 
 class TextInput(pydantic.BaseModel):
     type: typing.Literal["TextInput"]
     placeholder: str
+    marginTopRem: int | None
+    marginRightRem: int | None
+    marginBottomRem: int | None
+    marginLeftRem: int | None
+    paddingTopRem: int | None
+    paddingRightRem: int | None
+    paddingBottomRem: int | None
+    paddingLeftRem: int | None
 
 class Form(pydantic.BaseModel):
     type: typing.Literal["Form"]
     children: typing.List["UiElement"]
+    marginTopRem: int | None
+    marginRightRem: int | None
+    marginBottomRem: int | None
+    marginLeftRem: int | None
+    paddingTopRem: int | None
+    paddingRightRem: int | None
+    paddingBottomRem: int | None
+    paddingLeftRem: int | None
 
 class UiElement(pydantic.BaseModel):
     element: Button | Container | Text | TextInput | Form
@@ -75,7 +116,7 @@ async def generate_json(file: UploadFile = File(...)):
 
     # Path to your image
     current_directory = os.path.dirname(__file__)
-    UPLOAD_DIR = os.path.join(current_directory, "..", "resources")
+    UPLOAD_DIR = os.path.join(current_directory, "temp")
     image_path = os.path.join(UPLOAD_DIR, file.filename)  # Get the file path
 
     with open(image_path, "wb") as f:
@@ -91,7 +132,7 @@ async def generate_json(file: UploadFile = File(...)):
         messages=[
             {
               "role": "system",
-              "content": "You are a UI generator AI. Convert the user input into a UI. You should attempt to convert all of the input. If you encounter a sensitive image you must convert it to a placeholder image."
+              "content": "You are a UI generator AI. Convert the user input into a UI. You should include all borders and mimic the exact spacing. If you encounter a sensitive image you must convert it to a placeholder image."
             },
             {
               "role": "user",
