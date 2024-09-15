@@ -47,7 +47,21 @@ export const UploadFile = () => {
     }
   };
   return (
-    <div className="wrapper">
+    <>
+    {previewImgUrl && (
+        <div
+          className="image_wrapper"
+          style={{display: "flex", justifyContent: "center", position: 'relative' }}
+        >
+          <img src={previewImgUrl} alt="image" style={{ width: 'auto', height: '360px', borderRadius: '8px', zIndex: 1000}}
+          />
+        </div>
+      )}
+    <div style={{
+      position: "absolute",       
+      top: "80%",                 
+      left: "35%"          
+    }}className="wrapper">
       {selectedImage && progress > 0 && (
         <div className="progress my-3">
           <div className="progress-bar progress-bar-info" role="progressbar">
@@ -55,22 +69,20 @@ export const UploadFile = () => {
           </div>
         </div>
       )}
-      {previewImgUrl && (
-        <div
-          className="image_wrapper"
-          style={{ display: "flex", justifyContent: "center" }}
-        >
-          <img src={previewImgUrl} alt="image" style={{ width: "50vw" }} />
-        </div>
-      )}
+      
 
-      <form onSubmit={handleImageUpload}>
-        <input type="file" onChange={handleFileChange} accept="image/*" />
-        <button disabled={!selectedImage} type="submit">
-          Upload image
+      <form 
+      onSubmit={handleImageUpload}
+      >
+        <input
+        type="file" onChange={handleFileChange} accept="image/*" />
+        <button style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", position: 'absolute', fontFamily: 'Istok Web'}}
+        disabled={!selectedImage} type="submit">
+          Upload
         </button>
       </form>
     </div>
+    </>
   );
 };
 
