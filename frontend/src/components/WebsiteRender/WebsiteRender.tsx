@@ -61,7 +61,7 @@ export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[
           )
       } else if (uiElement.element.type == "Image") {
         return (
-          <img src={uiElement.element.url == null ? `https://placehold.co/${uiElement.element.widthPx}x${uiElement.element.heightPx}` : uiElement.element.url} />
+          <img height={uiElement.element.url == null ? undefined : uiElement.element.heightPx} width={uiElement.element.url == null ? undefined : uiElement.element.widthPx} src={uiElement.element.url == null ? `https://placehold.co/${uiElement.element.widthPx}x${uiElement.element.heightPx}` : uiElement.element.url} />
         )
       }
     }) 
