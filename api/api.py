@@ -35,6 +35,8 @@ app.add_middleware(
 class Button(pydantic.BaseModel):
     type: typing.Literal["Button"]
     text: str
+    color: str
+    backgroundColor: str
     marginTopRem: int | None
     marginRightRem: int | None
     marginBottomRem: int | None
@@ -48,6 +50,8 @@ class Button(pydantic.BaseModel):
 class Text(pydantic.BaseModel):
     type: typing.Literal["Text"]
     value: str
+    fontSizeRem: int | None = None
+    color: str
     url: str | None
     marginTopRem: int | None
     marginRightRem: int | None
@@ -62,6 +66,7 @@ class Text(pydantic.BaseModel):
 class Container(pydantic.BaseModel):
     type: typing.Literal["Container"]
     children: typing.List["UiElement"]
+    backgroundColor: str
     direction: typing.Literal["row"] | typing.Literal["col"]
     justify: (
         typing.Literal["start"]

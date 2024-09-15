@@ -5,6 +5,8 @@ interface DiscriminatableUiElement {
 export interface Button extends DiscriminatableUiElement {
   type: "Button";
   text: string;
+  color: string;
+  backgroundColor: string;
   marginTopRem: number | null;
   marginRightRem: number | null;
   marginBottomRem: number | null;
@@ -18,6 +20,8 @@ export interface Button extends DiscriminatableUiElement {
 export interface Text extends DiscriminatableUiElement {
   type: "Text";
   value: string;
+  fontSizeRem: number | null;
+  color: string;
   url: string | null;
   marginTopRem: number | null;
   marginRightRem: number | null;
@@ -32,6 +36,7 @@ export interface Text extends DiscriminatableUiElement {
 export interface Container extends DiscriminatableUiElement {
   type: "Container";
   children: UiElement[];
+  backgroundColor: string;
   direction: "row" | "col";
   justify: "start" | "end" | "center" | "between" | "around";
   align: "start" | "end" | "center" | "stretch";
