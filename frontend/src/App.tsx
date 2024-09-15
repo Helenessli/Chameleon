@@ -31,6 +31,7 @@ function App() {
   const [allText, setAllText] = useState("");
   const [textPrompt, setTextPrompt] = useState<string>(""); 
   const inputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [curImage, setCurImage] = useState<File>();
   const UploadFile = ({setCurImage}) => {
@@ -57,6 +58,7 @@ function App() {
     const handleImageUpload = async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       try {
+        setLoading(true);
         const formData = new FormData();
         if (selectedImage) {
           formData.append("text", "");
@@ -75,8 +77,10 @@ function App() {
           setCurImage(selectedImage);
           setUiElement(response.data.ui.root);
           console.log(response);
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
@@ -104,7 +108,7 @@ function App() {
         )}
      
 
-        <form style = {{marginLeft: "500px"}}onSubmit={handleImageUpload}>
+        <form style = {{marginLeft: "500px"}} onSubmit={handleImageUpload}>
           <input type="file" onChange={handleFileChange} accept="image/*" />
           <button disabled={!selectedImage} type="submit" style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", position: 'absolute', fontFamily: 'Istok Web'}}>
             Upload
@@ -118,6 +122,11 @@ function App() {
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      setLoading(true);
+
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
       const formData = new FormData();
       formData.append("text", allText.concat(textPrompt));
       formData.append("file", curImage);
@@ -127,9 +136,7 @@ function App() {
       console.log(response);
       setAllText(allText.concat(textPrompt).concat("\\n"))
       setTextPrompt(""); 
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
+      setLoading(false);
     }
   };
 
@@ -151,6 +158,8 @@ function App() {
 
       <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px',  marginLeft: '550px', marginTop: '50px' }}>Chameleon</h1>
       {isUploadPage ? <UploadFile setCurImage={setCurImage}/> : <WebsiteRender uiElement={uiElement} />}
+      {loading && (<div className="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>)}
+     
       <Button
         style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web', position: 'absolute'}} onClick={() => setIsUploadPage(!isUploadPage)}>
         Change Page
