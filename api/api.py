@@ -116,7 +116,7 @@ async def generate_json(file: UploadFile = File(...)):
 
     # Path to your image
     current_directory = os.path.dirname(__file__)
-    UPLOAD_DIR = os.path.join(current_directory, "..", "resources")
+    UPLOAD_DIR = os.path.join(current_directory, "temp")
     image_path = os.path.join(UPLOAD_DIR, file.filename)  # Get the file path
 
     with open(image_path, "wb") as f:
