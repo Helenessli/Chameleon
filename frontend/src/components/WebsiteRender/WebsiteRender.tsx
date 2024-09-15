@@ -2,32 +2,56 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { UiElement } from "./types";
 
+
 export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[]}) {
-    console.log(uiElement)
     const uiElements = Array.isArray(uiElement) ? uiElement : [uiElement]
     return uiElements.map(uiElement => {
+      let margins: {[key: string]: string} = {}
+      if (uiElement.element.marginTopRem != null)
+        margins["marginTop"] = `${uiElement.element.marginTopRem}rem`
+      if (uiElement.element.marginRightRem != null)
+        margins["marginRight"] = `${uiElement.element.marginRightRem}rem`
+      if (uiElement.element.marginBottomRem != null)
+        margins["marginBottom"] = `${uiElement.element.marginBottomRem}rem`
+      if (uiElement.element.marginLeftRem != null)
+        margins["marginLeft"] = `${uiElement.element.marginLeftRem}rem`
+
+      let padding: {[key: string]: string} = {}
+      if (uiElement.element.paddingTopRem != null)
+        padding["paddingTop"] = `${uiElement.element.paddingTopRem}rem`
+      if (uiElement.element.paddingRightRem != null)
+        padding["paddingRight"] = `${uiElement.element.paddingRightRem}rem`
+      if (uiElement.element.paddingBottomRem != null)
+        padding["paddingBottom"] = `${uiElement.element.paddingBottomRem}rem`
+      if (uiElement.element.paddingLeftRem != null)
+        padding["paddingLeft"] = `${uiElement.element.paddingLeftRem}rem`
+
+      let styles = {...margins, ...padding}
       if (uiElement.element.type == "Container") {
           const direction = uiElement.element.direction == "row" ? "flex-row" : "flex-col";
           const justify = `justify-${uiElement.element.justify}`;
           const align = `items-${uiElement.element.align}`;
+          styles = {...styles, "border-width": `${uiElement.element.borderWidthPx}px`}
           return (
-              <div className={`flex ${direction} ${justify} ${align}`}>
+              <div className={`flex ${direction} ${justify} ${align}`} style={styles}>
                   <WebsiteRender uiElement={uiElement.element.children || []} />
               </div>
           )
       } else if (uiElement.element.type == "Text") {
           return (
-              <span>
+              <span style={styles}>
                   {uiElement.element.value}
               </span>
           )
       } else if (uiElement.element.type == "Button") {
           return (
-              <Button>{uiElement.element.text}</Button>
+              <Button style={styles}>
+                {uiElement.element.text}
+              </Button>
           )
       } else if (uiElement.element.type == "TextInput" ) {
           return (
-              <Input placeholder={uiElement.element.placeholder} />
+              <Input placeholder={uiElement.element.placeholder} style={styles}/>
           )
       } else if (uiElement.element.type == "Form") {
           return (

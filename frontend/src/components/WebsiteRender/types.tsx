@@ -5,11 +5,27 @@ interface DiscriminatableUiElement {
 export interface Button extends DiscriminatableUiElement {
   type: "Button";
   text: string;
+  marginTopRem: number | null;
+  marginRightRem: number | null;
+  marginBottomRem: number | null;
+  marginLeftRem: number | null;
+  paddingTopRem: number | null;
+  paddingRightRem: number | null;
+  paddingBottomRem: number | null;
+  paddingLeftRem: number | null;
 }
 
 export interface Text extends DiscriminatableUiElement {
   type: "Text";
   value: string;
+  marginTopRem: number | null;
+  marginRightRem: number | null;
+  marginBottomRem: number | null;
+  marginLeftRem: number | null;
+  paddingTopRem: number | null;
+  paddingRightRem: number | null;
+  paddingBottomRem: number | null;
+  paddingLeftRem: number | null;
 }
 
 export interface Container extends DiscriminatableUiElement {
@@ -18,16 +34,41 @@ export interface Container extends DiscriminatableUiElement {
   direction: "row" | "col";
   justify: "start" | "end" | "center" | "between" | "around";
   align: "start" | "end" | "center" | "stretch";
+  borderWidthPx: number | null;
+  marginTopRem: number | null;
+  marginRightRem: number | null;
+  marginBottomRem: number | null;
+  marginLeftRem: number | null;
+  paddingTopRem: number | null;
+  paddingRightRem: number | null;
+  paddingBottomRem: number | null;
+  paddingLeftRem: number | null;
 }
 
 export interface TextInput extends DiscriminatableUiElement {
   type: "TextInput";
   placeholder: string;
+  marginTopRem: number | null;
+  marginRightRem: number | null;
+  marginBottomRem: number | null;
+  marginLeftRem: number | null;
+  paddingTopRem: number | null;
+  paddingRightRem: number | null;
+  paddingBottomRem: number | null;
+  paddingLeftRem: number | null;
 }
 
 export interface Form extends DiscriminatableUiElement {
   type: "Form";
   children: UiElement[];
+  marginTopRem: number | null;
+  marginRightRem: number | null;
+  marginBottomRem: number | null;
+  marginLeftRem: number | null;
+  paddingTopRem: number | null;
+  paddingRightRem: number | null;
+  paddingBottomRem: number | null;
+  paddingLeftRem: number | null;
 }
 
 export interface UiElement {
