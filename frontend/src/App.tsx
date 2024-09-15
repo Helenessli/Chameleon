@@ -125,7 +125,7 @@ function App() {
       const response = await axiosInstance.post("/upload-file", formData);
       setUiElement(response.data.ui.root);
       console.log(response);
-      setAllText(allText.concat(textPrompt).concat("\n"))
+      setAllText(allText.concat(textPrompt).concat("\\n"))
       setTextPrompt(""); 
       if (inputRef.current) {
         inputRef.current.value = "";

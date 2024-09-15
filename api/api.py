@@ -190,21 +190,7 @@ async def generate_json(text: str = Form(...), file: UploadFile = File(...)):
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-2024-08-06",
         temperature=0.7,
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a UI generator AI. Convert the user input into a UI. You should include all borders and mimic the exact spacing. Unless explicitly given an image url, you should leave image urls null.",
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
-                    }
-                ],
-            },
-        ],
+        messages=messages,
         response_format=Response,
     )
     end = time.time()
