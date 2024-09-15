@@ -15,7 +15,9 @@ export interface Text extends DiscriminatableUiElement {
 export interface Container extends DiscriminatableUiElement {
   type: "Container";
   children: UiElement[];
-  direction: "row" | "col"
+  direction: "row" | "col";
+  justify: "start" | "end" | "center" | "between" | "around";
+  align: "start" | "end" | "center" | "stretch";
 }
 
 export interface TextInput extends DiscriminatableUiElement {

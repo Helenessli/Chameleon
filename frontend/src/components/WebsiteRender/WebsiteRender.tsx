@@ -1,6 +1,5 @@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Text } from "../ui/text";
 import { UiElement } from "./types";
 
 export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[]}) {
@@ -8,16 +7,19 @@ export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[
     const uiElements = Array.isArray(uiElement) ? uiElement : [uiElement]
     return uiElements.map(uiElement => {
       if (uiElement.element.type == "Container") {
+          const direction = uiElement.element.direction == "row" ? "flex-row" : "flex-col";
+          const justify = `justify-${uiElement.element.justify}`;
+          const align = `items-${uiElement.element.align}`;
           return (
-              <div className={uiElement.element.direction == "row" ? "flex flex-row" : "flex flex-col"}>
+              <div className={`flex ${direction} ${justify} ${align}`}>
                   <WebsiteRender uiElement={uiElement.element.children || []} />
               </div>
           )
       } else if (uiElement.element.type == "Text") {
           return (
-              <Text as={"p"}>
+              <span>
                   {uiElement.element.value}
-              </Text>
+              </span>
           )
       } else if (uiElement.element.type == "Button") {
           return (
