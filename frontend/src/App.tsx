@@ -1,7 +1,9 @@
 import './App.css'
+import { useState } from "react"
 import { WebsiteRender } from './components/WebsiteRender/WebsiteRender'
 import { Response } from './components/WebsiteRender/types'
 import { UploadFile } from "./components/UploadFile";
+import { Button } from './components/ui/button'
 
 const response: Response = {
   "ui":{
@@ -71,11 +73,12 @@ const response: Response = {
 }
 
 function App() {
+  const [isUploadPage, setIsUploadPage] = useState(true);
   return (
     <>
       <h1>Chameleon</h1>
-      <UploadFile />
-      <WebsiteRender uiElement={response.ui.root} />
+      {isUploadPage ? <UploadFile /> : <WebsiteRender uiElement={response.ui.root} />}
+      <Button style={{position: "fixed", bottom: 10, left: 10}} onClick={() => setIsUploadPage(!isUploadPage)}>Change pages</Button>
     </>
   );
 }
