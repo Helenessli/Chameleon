@@ -82,7 +82,7 @@ function App() {
           className="image_wrapper"
           style={{ display: "flex", justifyContent: "center" }}
         >
-          <img src={previewImgUrl} alt="image" style={{ height: "500px", width: 'auto'}} />
+          <img src={previewImgUrl} alt="image" style={{ height: "450px", width: 'auto'}} />
         </div>
       )}
       <div className="wrapper" style={{
@@ -139,19 +139,21 @@ function App() {
         <img src={logo}/>
         <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px'}}>Chameleon</h1>
       </div>
+      <Input value={textPrompt} style={{width: 800, backgroundColor: "white", marginLeft: "auto", marginRight: "auto", visibility: isUploadPage || uiElement == null ? "hidden" : "visible", marginBottom: "10px"}} onChange={(e) => setTextPrompt(e.target.value)}
+        onKeyDown={handleKeyDown} placeholder="Customize your results" />
       {isUploadPage ? <UploadFile setCurImage={setCurImage}/> : (
-        <div style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", borderRadius: "20px", padding: "15px", width: "70%", marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
+        <div style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", borderRadius: "20px", padding: "15px", width: "70%", marginLeft: "auto", marginRight: "auto", textAlign: "center"}}>
           {uiElement == null ? <span>There's nothing here yet! Try uploading a file and then check back.</span> : <WebsiteRender uiElement={uiElement} />}
         </div>
       )}
-      {loading && (<div className="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>)}
+      <div style={{position: "fixed", top: "calc(50% - 32px)", left: "calc(50% - 32px)"}}>
+        {loading && (<div className="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>)}
+      </div>
       <Button
         disabled={loading}
-        style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", position: "fixed", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web'}} onClick={() => setIsUploadPage(!isUploadPage)}>
-        Change Page
+        style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", width: "80px", color: "black", position: "fixed", bottom: 20, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web'}} onClick={() => setIsUploadPage(!isUploadPage)}>
+        {isUploadPage ? "Results" : "Upload"}
       </Button>
-      <Input disabled={loading} value={textPrompt} style={{position: "fixed", bottom: 10, right: 10, width: 300}} onChange={(e) => setTextPrompt(e.target.value)}
-        onKeyDown={handleKeyDown} placeholder="Add more prompt changes" />
     </>
   );
 }
