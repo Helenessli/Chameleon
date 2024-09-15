@@ -75,7 +75,20 @@ function App() {
       }
     };
     return (
-      <div className="wrapper">
+      <>
+      {previewImgUrl && (
+        <div 
+          className="image_wrapper"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          <img src={previewImgUrl} alt="image" style={{ height: "350px", width: 'auto'}} />
+        </div>
+      )}
+      <div className="wrapper" style={{
+              position: "absolute",       
+              top: "80%",                 
+             
+      }}>
         {selectedImage && progress > 0 && (
           <div className="progress my-3">
             <div className="progress-bar progress-bar-info" role="progressbar">
@@ -83,22 +96,16 @@ function App() {
             </div>
           </div>
         )}
-        {previewImgUrl && (
-          <div
-            className="image_wrapper"
-            style={{ display: "flex", justifyContent: "center" }}
-          >
-            <img src={previewImgUrl} alt="image" style={{ width: "50vw" }} />
-          </div>
-        )}
+     
 
-        <form onSubmit={handleImageUpload}>
+        <form style = {{marginLeft: "500px"}}onSubmit={handleImageUpload}>
           <input type="file" onChange={handleFileChange} accept="image/*" />
-          <button disabled={!selectedImage} type="submit">
-            Upload image
+          <button disabled={!selectedImage} type="submit" style={{background: "linear-gradient(90deg, #F2F7B6, #EAFCBE, #B9F0DB)", padding: "6px 20px", borderRadius: "8px", border: "1px solid #83D3A0", position: 'absolute', fontFamily: 'Istok Web'}}>
+            Upload
           </button>
         </form>
       </div>
+      </>
     );
   };
   const [isUploadPage, setIsUploadPage] = useState(true);
@@ -107,7 +114,7 @@ function App() {
     <>
       <img
         src={logo}  
-        style={{ width: 'auto', height: 'auto', position: 'absolute', left: '30%'}}  
+        style={{ width: 'auto', height: 'auto', position: 'absolute', marginLeft: '430px'}}  
       />
       <img
         src={leftdecor}  
@@ -118,7 +125,7 @@ function App() {
         style={{ width: 'auto', height: 'auto', position: 'absolute', right: '0', bottom: '0', transform: 'scale(0.8)', transformOrigin: 'bottom right'}}  
       />
 
-      <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px',  marginLeft: '100px' }}>Chameleon</h1>
+      <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px',  marginLeft: '550px', marginTop: '50px' }}>Chameleon</h1>
       {isUploadPage ? <UploadFile /> : <WebsiteRender uiElement={uiElement} />}
       <Button
         style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web', position: 'absolute'}} onClick={() => setIsUploadPage(!isUploadPage)}>
