@@ -7,23 +7,23 @@ export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[
     const uiElements = Array.isArray(uiElement) ? uiElement : [uiElement]
     return uiElements.map(uiElement => {
       let margins: {[key: string]: string} = {}
-      if (uiElement.element.marginTopRem != null)
+      if (uiElement.element.marginTopRem)
         margins["marginTop"] = `${uiElement.element.marginTopRem}rem`
-      if (uiElement.element.marginRightRem != null)
+      if (uiElement.element.marginRightRem)
         margins["marginRight"] = `${uiElement.element.marginRightRem}rem`
-      if (uiElement.element.marginBottomRem != null)
+      if (uiElement.element.marginBottomRem)
         margins["marginBottom"] = `${uiElement.element.marginBottomRem}rem`
-      if (uiElement.element.marginLeftRem != null)
+      if (uiElement.element.marginLeftRem)
         margins["marginLeft"] = `${uiElement.element.marginLeftRem}rem`
 
       let padding: {[key: string]: string} = {}
-      if (uiElement.element.paddingTopRem != null)
+      if (uiElement.element.paddingTopRem)
         padding["paddingTop"] = `${uiElement.element.paddingTopRem}rem`
-      if (uiElement.element.paddingRightRem != null)
+      if (uiElement.element.paddingRightRem)
         padding["paddingRight"] = `${uiElement.element.paddingRightRem}rem`
-      if (uiElement.element.paddingBottomRem != null)
+      if (uiElement.element.paddingBottomRem)
         padding["paddingBottom"] = `${uiElement.element.paddingBottomRem}rem`
-      if (uiElement.element.paddingLeftRem != null)
+      if (uiElement.element.paddingLeftRem)
         padding["paddingLeft"] = `${uiElement.element.paddingLeftRem}rem`
 
       let styles = {...margins, ...padding}
