@@ -95,8 +95,22 @@ class Form(pydantic.BaseModel):
     paddingBottomRem: int | None
     paddingLeftRem: int | None
 
+class Image(pydantic.BaseModel):
+    type: typing.Literal["Image"]
+    url: str | None
+    widthPx: int
+    heightPx: int
+    marginTopRem: int | None
+    marginRightRem: int | None
+    marginBottomRem: int | None
+    marginLeftRem: int | None
+    paddingTopRem: int | None
+    paddingRightRem: int | None
+    paddingBottomRem: int | None
+    paddingLeftRem: int | None
+
 class UiElement(pydantic.BaseModel):
-    element: Button | Container | Text | TextInput | Form
+    element: Button | Container | Text | TextInput | Form | Image
 
 class Ui(pydantic.BaseModel):
     root: UiElement
@@ -129,10 +143,11 @@ async def generate_json(file: UploadFile = File(...)):
     start = time.time()
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-2024-08-06",
+        temperature=0.7,
         messages=[
             {
               "role": "system",
-              "content": "You are a UI generator AI. Convert the user input into a UI. You should include all borders and mimic the exact spacing. If you encounter a sensitive image you must convert it to a placeholder image."
+              "content": "You are a UI generator AI. Convert the user input into a UI. You should include all borders and mimic the exact spacing. Unless explicitly given an image url, you should leave image urls null."
             },
             {
               "role": "user",
@@ -152,6 +167,7 @@ async def generate_json(file: UploadFile = File(...)):
 
     logger.info(f"inference took {end - start} sec")
     if completion and completion.choices:
+        print(completion.choices[0].message.parsed)
         return completion.choices[0].message.parsed
     else:
         # Return error message with status code

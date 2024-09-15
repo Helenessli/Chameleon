@@ -71,8 +71,23 @@ export interface Form extends DiscriminatableUiElement {
   paddingLeftRem: number | null;
 }
 
+export interface Image extends DiscriminatableUiElement {
+  type: "Image";
+  url: string | null;
+  widthPx: number;
+  heightPx: number;
+  marginTopRem: number | null;
+  marginRightRem: number | null;
+  marginBottomRem: number | null;
+  marginLeftRem: number | null;
+  paddingTopRem: number | null;
+  paddingRightRem: number | null;
+  paddingBottomRem: number | null;
+  paddingLeftRem: number | null;
+}
+
 export interface UiElement {
-  element: Button | Text | Container | TextInput | Form;
+  element: Button | Text | Container | TextInput | Form | Image;
 }
 
 export interface Ui {

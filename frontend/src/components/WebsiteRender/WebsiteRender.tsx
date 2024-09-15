@@ -59,6 +59,10 @@ export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[
                   <WebsiteRender uiElement={uiElement.element.children || []} />
               </div>
           )
+      } else if (uiElement.element.type == "Image") {
+        return (
+          <img src={uiElement.element.url == null ? `https://placehold.co/${uiElement.element.widthPx}x${uiElement.element.heightPx}` : uiElement.element.url} />
+        )
       }
     }) 
 }
