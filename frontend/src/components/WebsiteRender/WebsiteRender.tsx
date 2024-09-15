@@ -40,7 +40,7 @@ export function WebsiteRender({ uiElement }: { uiElement: UiElement | UiElement[
       } else if (uiElement.element.type == "Text") {
           return (
               <span style={styles}>
-                  {uiElement.element.value}
+                  {uiElement.element.url == null ? uiElement.element.value : (<a href={uiElement.element.url} target="_blank">{uiElement.element.value}</a>)}
               </span>
           )
       } else if (uiElement.element.type == "Button") {
