@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { WebsiteRender } from "./components/WebsiteRender/WebsiteRender";
 import { Response } from "./components/WebsiteRender/types";
 import { Button } from "./components/ui/button";
@@ -8,6 +8,7 @@ import rightdecor from './resources/rightdecor.png';
 
 import { ChangeEventHandler, FormEvent } from "react";
 import axios from "axios";
+import { Input } from "./components/ui/input";
 
 const fileToDataString = (file: File) => {
   return new Promise<string>((resolve, reject) => {
@@ -27,8 +28,12 @@ const response: Response = {"ui":{"root":{"element":{"type":"Container","childre
 
 function App() {
   const [uiElement, setUiElement] = useState(response.ui.root);
+  const [allText, setAllText] = useState("");
+  const [textPrompt, setTextPrompt] = useState<string>(""); 
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const UploadFile = () => {
+  const [curImage, setCurImage] = useState<File>();
+  const UploadFile = ({setCurImage}) => {
     const [selectedImage, setSelectedImage] = useState<File>();
     const [previewImgUrl, setPreviewimgUrl] = useState("");
     const [progress, setProgress] = useState<number>(0);
@@ -54,8 +59,8 @@ function App() {
       try {
         const formData = new FormData();
         if (selectedImage) {
+          formData.append("text", "");
           formData.append("file", selectedImage);
-          console.log(formData);
           const response = await axiosInstance.post("/upload-file", formData, {
             onUploadProgress: (progressEvent) => {
               if (progressEvent.total) {
@@ -67,6 +72,7 @@ function App() {
             },
           });
           setProgress(0);
+          setCurImage(selectedImage);
           setUiElement(response.data.ui.root);
           console.log(response);
         }
@@ -109,6 +115,24 @@ function App() {
     );
   };
   const [isUploadPage, setIsUploadPage] = useState(true);
+
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      const formData = new FormData();
+      formData.append("text", allText.concat(textPrompt));
+      formData.append("file", curImage);
+      console.log(textPrompt);
+      const response = await axiosInstance.post("/upload-file", formData);
+      setUiElement(response.data.ui.root);
+      console.log(response);
+      setAllText(allText.concat(textPrompt).concat("\\n"))
+      setTextPrompt(""); 
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+    }
+  };
+
   return (
     
     <>
@@ -126,11 +150,13 @@ function App() {
       />
 
       <h1 style={{ color: 'black', fontFamily: 'Istok Web, sans-serif', fontSize: '90px',  marginLeft: '550px', marginTop: '50px' }}>Chameleon</h1>
-      {isUploadPage ? <UploadFile /> : <WebsiteRender uiElement={uiElement} />}
+      {isUploadPage ? <UploadFile setCurImage={setCurImage}/> : <WebsiteRender uiElement={uiElement} />}
       <Button
         style = {{background: "linear-gradient(90deg, #F9D7B7, #F2F7B6)", color: "black", bottom: 10, left: 10, border: "1px solid #F9B8A3", fontFamily: 'Istok Web', position: 'absolute'}} onClick={() => setIsUploadPage(!isUploadPage)}>
         Change Page
       </Button>
+      <Input value={textPrompt} style={{position: "fixed", bottom: 10, right: 10, width: 300}} onChange={(e) => setTextPrompt(e.target.value)}
+        onKeyDown={handleKeyDown} placeholder="Add more prompt changes" />
     </>
   );
 }
